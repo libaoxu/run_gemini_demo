@@ -107,4 +107,4 @@ jobs:
                 ]
               }
             }
-          prompt: '/gemini-review'
+          prompt: 'only review folder @src /gemini-review'
