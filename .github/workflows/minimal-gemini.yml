@@ -40,6 +40,7 @@ jobs:
           ISSUE_NUMBER: '${{ github.event.pull_request.number || github.event.issue.number }}'
           REPOSITORY: '${{ github.repository }}'
           ADDITIONAL_CONTEXT: '${{ inputs.additional_context }}'
+          GOOGLE_GENAI_USE_VERTEXAI: '${{ vars.GCP_WIF_PROVIDER != "" || vars.GOOGLE_GENAI_USE_VERTEXAI }}'
         with:
           gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
           gcp_project_id: '${{ vars.GOOGLE_CLOUD_PROJECT }}'
@@ -49,7 +50,6 @@ jobs:
           gemini_model: '${{ vars.GEMINI_MODEL }}'
           google_api_key: '${{ secrets.GOOGLE_API_KEY }}'
           use_gemini_code_assist: '${{ vars.GOOGLE_GENAI_USE_GCA }}'
-          use_vertex_ai: '${{ vars.GCP_WIF_PROVIDER != "" || vars.GOOGLE_GENAI_USE_VERTEXAI }}'
           settings: |-
             {
               "model": {
