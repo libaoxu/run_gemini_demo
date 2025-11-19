@@ -1,30 +1,29 @@
-name: Minimal Flow
-
+name: Minimal Gemini
 on:
   issue_comment:
     types: [created]
 
 jobs:
-  execute:
+  respond:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # 必须包含的认证权限
     steps:
-    - name: Run Gemini
-      uses: google-github-actions/run-gemini-cli@v0
-      with:
-        # 显式声明所有认证参数（即使部分为空）
-        gemini_api_key: ${{ secrets.GEMINI_KEY }}
-        google_api_key: ''  # 空占位符
-        gcp_workload_identity_provider: ''
-        gcp_service_account: ''
-        use_vertex_ai: false  # 明确关闭Vertex AI
-        use_gemini_code_assist: false  # 明确关闭GCA
-        # 强制指定settings配置
-        settings: |
-          {
-            "auth": {
-              "method": "api_key",
-              "api_key": "${{ secrets.GEMINI_KEY }}"
+      - name: Gemini Response
+        uses: google-github-actions/run-gemini-cli@v0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}  # 基本权限令牌
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}  # 必须的API密钥
+          gcp_workload_identity_provider: ''  # 保持空值但必须存在
+          gcp_service_account: ''  # 保持空值但必须存在
+          settings: |  # 最小化配置
+            {
+              "tools": {
+                "core": [
+                  "run_shell_command(echo)"
+                ]
+              }
             }
-          }
-        prompt: |
-          Respond to: ${{ github.event.comment.body }}
+          prompt: |
+            Respond to: ${{ github.event.comment.body }}
