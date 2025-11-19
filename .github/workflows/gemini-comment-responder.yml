@@ -1,0 +1,28 @@
+name: Gemini Comment Responder
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        if: '${{ vars.GCP_WIF_PROVIDER }}'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: '${{ vars.GCP_WIF_PROVIDER }}'
+          service_account: '${{ vars.SERVICE_ACCOUNT_EMAIL }}'
+
+      - name: Gemini Response
+        uses: google-github-actions/run-gemini-cli@v0
+        env:
+          GOOGLE_GENAI_USE_VERTEXAI: '${{ vars.GCP_WIF_PROVIDER != "" || vars.GOOGLE_GENAI_USE_VERTEXAI }}'
+        with:
+          gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
+          gcp_project_id: '${{ vars.GOOGLE_CLOUD_PROJECT }}'
+          gemini_model: '${{ vars.GEMINI_MODEL }}'
+          prompt: "Respond to: ${{ github.event.comment.body }}"
