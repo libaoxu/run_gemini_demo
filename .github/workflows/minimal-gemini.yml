@@ -1,0 +1,16 @@
+name: Minimal Flow
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run Gemini
+      uses: google-github-actions/run-gemini-cli@v0
+      with:
+        gemini_api_key: ${{ secrets.GEMINI_KEY }}
+        prompt: |
+          Respond to: ${{ github.event.comment.body }}
