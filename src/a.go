@@ -18,4 +18,5 @@ func main() {
 	}
 
 	fmt.Println(resp.Code)
+	fmt.Println(resp.Message)
 }
