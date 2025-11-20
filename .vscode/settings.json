@@ -1,0 +1,10 @@
+{
+  "gopls": {
+    "staticcheck": true,
+    "analyses": {
+      "nilness": true
+    }
+  },
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--enable=staticcheck,nilerr"]
+}
